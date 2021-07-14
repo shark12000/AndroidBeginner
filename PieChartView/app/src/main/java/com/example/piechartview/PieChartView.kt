@@ -9,23 +9,28 @@ import java.lang.Math.PI
 
 
 class PieChartView : View {
+
+    private var values: List<Int> = emptyList()
+    private var colorsArray: IntArray = intArrayOf(Color.RED, Color.GREEN, Color.BLACK, Color.BLUE, Color.DKGRAY, Color.MAGENTA)
+    private var paint = Paint()
+    private var rectF = RectF(0F, 0F, width.toFloat(), height.toFloat())
+    private var rect = Rect()
+
     constructor(context: Context) : super(context) {
     }
 
-    constructor(context: Context, @Nullable attrs: AttributeSet) : super(context, attrs, 0) {
+    constructor(context: Context, @Nullable attrs: AttributeSet) : super(context, attrs) {
     }
-    private var values: List<Int> = ArrayList()
-    private var colorsArray: IntArray = intArrayOf(Color.RED, Color.GREEN, Color.BLACK, Color.BLUE, Color.DKGRAY, Color.MAGENTA)
-    private var colors: ArrayList<Int> = ArrayList()
 
+    constructor(context: Context, @Nullable attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    }
 
-    fun sendData(values: String) {
-        this.values = values.split(", ").map { it.toInt() }
+    fun sendData(values: List<Int>) {
+        this.values = values
+        invalidate()
     }
 
     private fun assignColor(index: Int) : Paint {
-        val paint = Paint()
-
         paint.color = colorsArray[index]
 
         return paint
@@ -65,16 +70,11 @@ class PieChartView : View {
             val percent = value()[n]/360 * 100
             val percentStr = "$percent%"
 
-            val paint = Paint()
             paint.color = Color.BLACK
             paint.textSize = 40F
             paint.textAlign = Paint.Align.CENTER
 
             canvas?.save()
-
-            var half = fromAngle + value()[n] / 2F
-
-            var textCenterX = 
 
             paint.getTextBounds(percentStr, 0, value()[n].toString().length, rect)
             var x = rectF.centerX() + kotlin.math.cos(angle)
@@ -102,8 +102,8 @@ class PieChartView : View {
         val right = centerX + width / 2
         val bottom = centerY + height / 2
 
-        val rectF = RectF(0F, 0F, width.toFloat(), height.toFloat())
-        val rect = Rect(left, top, right, bottom)
+        rect.set(left, top, right, bottom)
+
         justDraw(canvas, rectF)
         text(canvas, rect, rectF)
     }

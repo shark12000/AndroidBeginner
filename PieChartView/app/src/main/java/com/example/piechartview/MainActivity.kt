@@ -53,8 +53,8 @@ class MainActivity : Activity() {
 
         button.setOnClickListener() {
             try {
-                pieChartView.sendData(editText.text.toString())
-                text.text = editText.text.toString()
+                val list: List<Int> = editText.text.toString().split(", ").map { it.toInt() }
+                pieChartView.sendData(list)
             } catch (e: Exception) {
                 text.text = e.message
             }
